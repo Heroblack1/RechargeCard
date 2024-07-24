@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    section {
+        padding: 20px;
+        width: 500px;
+        height: 100vh;
+        background-color: rgb(213, 190, 190);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* justify-content: center; */
+        gap: 30px;
+    }
+    select {
+        width: 200px;
+        height: 40px;
+        border-radius: 12px;
+        color: brown;
+        font-style: italic;
+    }
+    button {
+        width: 150px;
+        height: 41px;
+        color: brown;
+        font-style: italic;
+        border-radius: 12px;
+    }
+    input {
+        width: 200px;
+        height: 40px;
+        border-radius: 12px;
+        color: brown;
+        font-style: italic;
+    }
+    table tr td {
+       border-collapse: collapse;
+        border: 2px solid black;
+        
+    }
+</style>
+
+<body>
+    <section>
+        <div>
+            <select name="" id="provider">
+                <option value="choose provider"> choose provider</option>
+                <option value="mtn"> mtn</option>
+                <option value="glo"> glo</option>
+                <option value="9mobile"> 9mobile</option>
+                <option value="airtel"> airtel </option>
+            </select>
+        </div>
+    
+        <div>
+            <select name="" id="amount">
+                <option value="choose amount"> choose amount</option>
+                <option value="100"> 100</option>
+                <option value="200"> 200 </option>
+                <option value="500"> 500</option>
+                <option value="1000"> 1000 </option>
+            </select>
+        </div>
+    
+        <button onclick="generate()"> Generate </button>
+        <h1> pin: <span id="span"> </span></h1>
+    
+    
+        <div>
+            <p>load airtime</p>
+            <input type="text"> <button> load </button>
+        </div>
+    
+    <table id="tab">
+    
+    </table>
+    <button id="clear">clear localStorage</button>
+    </section>
+    
+</body>
+
+</html>
+<script>
+    let tab = document.getElementById('tab');
+    let clear = document.getElementById('clear');
+    let dataBase = JSON.parse(localStorage.getItem('bases')) || [];
+
+
+    function generate() {
+        if (provider.value === 'choose provider' || amount.value === 'choose amount') {
+            alert('you havent picked a provider')
+        } else {
+            let pin = ''
+            for (let index = 0; index < 10; index++) {
+                pin += Math.floor(Math.random() * 10);
+            }
+
+            document.getElementById('span').innerText = pin
+  
+            let obj = {
+                provider: provider.value,
+                amount: amount.value,
+                pin: pin,
+                isUsed: false,
+                dateCreated : new Date().toDateString(),
+                timeUsed: null
+            }
+
+            dataBase.push(obj)
+            console.log(dataBase);
+
+            let dataBaseJson = JSON.stringify(dataBase);
+            localStorage.setItem('bases', dataBaseJson);
+
+            tab.innerHTML = ""
+
+            for (let i = 0; i < dataBase.length; i++) {
+                tab.innerHTML += `<tr><td>${dataBase[i].provider}</td>
+                                      <td>${dataBase[i].amount}</td>
+                                      <td>${dataBase[i].pin}</td>
+                                      <td>${dataBase[i].isUsed}</td>
+                                      <td>${dataBase[i].dateCreated}</td>
+                                      <td>${dataBase[i].timeUsed}</td>
+                                  </tr>`
+            }
+            
+
+        }
+
+    }
+clear.addEventListener('click', () => {
+    localStorage.clear(dataBase);
+    tab.innerHTML = ""
+})
+
+
+
+</script>
